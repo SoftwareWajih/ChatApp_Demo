@@ -50,7 +50,10 @@
     protected override void OnInitialized()
     {
         messages.Add(new(ChatRole.System, SystemPrompt));
-        chatOptions.Tools = [AIFunctionFactory.Create(SearchAsync)];
+        chatOptions.Tools = [
+            AIFunctionFactory.Create(SearchAsync),
+            AIFunctionFactory.Create(GetWeather)
+        ];
     }
 
     private async Task AddUserMessageAsync(ChatMessage userMessage)
@@ -108,6 +111,12 @@
         var results = await Search.SearchAsync(searchPhrase, filenameFilter, maxResults: 5);
         return results.Select(result =>
             $"<result filename=\"{result.FileName}\" page_number=\"{result.PageNumber}\">{result.Text}</result>");
+    }
+
+    private async Task<string> GetWeather([Description("The city, correctly capitalized")] string city)
+    {
+        string[] weatherValues = ["Sunny", "Cloudy", "Rainy", "Snowy", "Balmy", "Bracing"];
+        return city == "London" ? "Drizzle" : weatherValues[Random.Shared.Next(weatherValues.Length)];
     }
 
     public void Dispose()
