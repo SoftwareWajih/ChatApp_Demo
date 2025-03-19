@@ -10,11 +10,14 @@
 <ChatHeader OnNewChat="@ResetConversationAsync" />
 
 <ChatMessageList Messages="@messages" InProgressMessage="@currentResponseMessage">
-    <NoMessagesContent>
+    @* <NoMessagesContent>
         <div>To get started, try asking about these example documents. You can replace these with your own data and replace this message.</div>
         <ChatCitation File="Example_Emergency_Survival_Kit.pdf"/>
         <ChatCitation File="Example_GPS_Watch.pdf"/>
-    </NoMessagesContent>
+    </NoMessagesContent> *@
+    <NoMessagesContent>
+        <div>Find any posts.</div>
+     </NoMessagesContent>
 </ChatMessageList>
 
 <div class="chat-container">
@@ -52,8 +55,9 @@
         messages.Add(new(ChatRole.System, SystemPrompt));
         chatOptions.Tools = [
             AIFunctionFactory.Create(SearchAsync),
-            AIFunctionFactory.Create(GetWeather)
-        ];
+            AIFunctionFactory.Create(GetWeather),
+            AIFunctionFactory.Create(DummyPosts),
+    ];
     }
 
     private async Task AddUserMessageAsync(ChatMessage userMessage)
@@ -116,7 +120,23 @@
     private async Task<string> GetWeather([Description("The city, correctly capitalized")] string city)
     {
         string[] weatherValues = ["Sunny", "Cloudy", "Rainy", "Snowy", "Balmy", "Bracing"];
-        return city == "London" ? "Drizzle" : weatherValues[Random.Shared.Next(weatherValues.Length)];
+        //return city == "London" ? "Drizzle" : weatherValues[Random.Shared.Next(weatherValues.Length)];
+        return await Task.Run(() => city == "London" ? "Drizzle" : weatherValues[Random.Shared.Next(weatherValues.Length)]);
+    }
+
+    public class DummyPostsModel
+    {
+        public int userId { get; set; }
+        public int id { get; set; }
+        public string title { get; set; } = null!;
+        public string body { get; set; } = null!;
+    }
+
+    private async Task<List<DummyPostsModel>> DummyPosts([Description("Post title, correctly capitalized")] string postTitle)
+    {
+        var response = await new HttpClient().GetFromJsonAsync<List<DummyPostsModel>>("https://jsonplaceholder.typicode.com/posts");
+        var filteredPosts = response?.Where(post => post.title.Contains(postTitle, StringComparison.OrdinalIgnoreCase)).ToList();
+        return filteredPosts ?? new List<DummyPostsModel>();
     }
 
     public void Dispose()
