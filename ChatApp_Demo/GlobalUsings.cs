@@ -1,0 +1,1 @@
+﻿global using ChatApp_Demo.Chat_Functions;

@@ -1,5 +1,7 @@
 ﻿@page "/"
 @using System.ComponentModel
+@* @using ChatApp_Demo.Chat_Functions *@
+@inject IDummy_Services Dummy_Services
 @inject IChatClient ChatClient
 @inject NavigationManager Nav
 @inject SemanticSearch Search
@@ -124,19 +126,19 @@
         return await Task.Run(() => city == "London" ? "Drizzle" : weatherValues[Random.Shared.Next(weatherValues.Length)]);
     }
 
-    public class DummyPostsModel
-    {
-        public int userId { get; set; }
-        public int id { get; set; }
-        public string title { get; set; } = null!;
-        public string body { get; set; } = null!;
-    }
+    // Hardcoded dummy data for Data Retrieval
+    // private async Task<List<Dummy_Posts>> DummyPosts([Description("Post title, correctly capitalized")] string postTitle)
+    // {
+    //     var response = await new HttpClient().GetFromJsonAsync<List<Dummy_Posts>>("https://jsonplaceholder.typicode.com/posts");
+    //     var filteredPosts = response?.Where(post => post.title.Contains(postTitle, StringComparison.OrdinalIgnoreCase)).ToList();
+    //     return filteredPosts ?? new List<Dummy_Posts>();
+    // }
 
-    private async Task<List<DummyPostsModel>> DummyPosts([Description("Post title, correctly capitalized")] string postTitle)
+    // Dependency injection for Data Retrieval
+    private async Task<List<Dummy_Posts>> DummyPosts([Description("Post title, correctly capitalized")] string postTitle)
     {
-        var response = await new HttpClient().GetFromJsonAsync<List<DummyPostsModel>>("https://jsonplaceholder.typicode.com/posts");
-        var filteredPosts = response?.Where(post => post.title.Contains(postTitle, StringComparison.OrdinalIgnoreCase)).ToList();
-        return filteredPosts ?? new List<DummyPostsModel>();
+        var response = await Dummy_Services.GetDummyPosts(postTitle);
+        return response;
     }
 
     public void Dispose()

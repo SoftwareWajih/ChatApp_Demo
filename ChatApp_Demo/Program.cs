@@ -1,9 +1,9 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.AI;
-using Microsoft.Extensions.VectorData;
 using ChatApp_Demo.Components;
 using ChatApp_Demo.Services;
 using ChatApp_Demo.Services.Ingestion;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.VectorData;
 using OpenAI;
 using System.ClientModel;
 
@@ -34,6 +34,9 @@ builder.Services.AddEmbeddingGenerator(embeddingGenerator);
 
 builder.Services.AddDbContext<IngestionCacheDbContext>(options =>
     options.UseSqlite("Data Source=ingestioncache.db"));
+
+// Dummy Service
+builder.Services.AddHttpClient<IDummy_Services, Dummy_Services>();
 
 var app = builder.Build();
 IngestionCacheDbContext.Initialize(app.Services);
