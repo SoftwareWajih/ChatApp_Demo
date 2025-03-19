@@ -59,6 +59,7 @@
             AIFunctionFactory.Create(SearchAsync),
             AIFunctionFactory.Create(GetWeather),
             AIFunctionFactory.Create(DummyPosts),
+            AIFunctionFactory.Create(Get_Exchange_Rate)
     ];
     }
 
@@ -137,8 +138,33 @@
     // Dependency injection for Data Retrieval
     private async Task<List<Dummy_Posts>> DummyPosts([Description("Post title, correctly capitalized")] string postTitle)
     {
-        var response = await Dummy_Services.GetDummyPosts(postTitle);
+        var response = await Dummy_Services.Get_Dummy_Posts(postTitle);
         return response;
+    }
+
+    private string FormatExchangeRate(string input)
+    {
+        // Remove "exchange rate" or "to" from the input
+        var cleanedInput = input.Replace("exchange rate", "", StringComparison.OrdinalIgnoreCase)
+                                .Replace("to", "", StringComparison.OrdinalIgnoreCase)
+                                .Trim();
+
+        // Split the input into currency codes
+        var currencies = cleanedInput.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (currencies.Length == 2)
+        {
+            return $"{currencies[0].ToLower()}/{currencies[1].ToLower()}";
+        }
+
+        throw new ArgumentException("Invalid exchange rate format. Please provide input in the format 'exchange rate usd eur' or 'usd to eur'.");
+    }
+
+    private async Task<double> Get_Exchange_Rate([Description("Exchange rate")] string exchangeRate)
+    {
+        var formattedExchangeRate = FormatExchangeRate(exchangeRate);
+        var response = await Dummy_Services.Get_Exchange_Rate(formattedExchangeRate);
+        return response.conversion_rate;
     }
 
     public void Dispose()
