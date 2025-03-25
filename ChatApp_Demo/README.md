@@ -21,3 +21,4 @@ Configure your token for this project using .NET User Secrets:
 
 Learn more about [prototyping with AI models using GitHub Models](https://docs.github.com/github-models/prototyping-with-ai-models).
 
+# [Consume Third Party APIs](./wwwroot/Documentation/readme.md)

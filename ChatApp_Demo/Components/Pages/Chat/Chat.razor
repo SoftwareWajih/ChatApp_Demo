@@ -1,6 +1,5 @@
 ﻿@page "/"
 @using System.ComponentModel
-@* @using ChatApp_Demo.Chat_Functions *@
 @inject IDummy_Services Dummy_Services
 @inject IChatClient ChatClient
 @inject NavigationManager Nav
@@ -127,7 +126,7 @@
         return await Task.Run(() => city == "London" ? "Drizzle" : weatherValues[Random.Shared.Next(weatherValues.Length)]);
     }
 
-    // Hardcoded dummy data for Data Retrieval
+    // // Hardcoded dummy data for Data Retrieval
     // private async Task<List<Dummy_Posts>> DummyPosts([Description("Post title, correctly capitalized")] string postTitle)
     // {
     //     var response = await new HttpClient().GetFromJsonAsync<List<Dummy_Posts>>("https://jsonplaceholder.typicode.com/posts");
