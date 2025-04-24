@@ -16,15 +16,23 @@
         <ChatCitation File="Example_Emergency_Survival_Kit.pdf"/>
         <ChatCitation File="Example_GPS_Watch.pdf"/>
     </NoMessagesContent> *@
-    <NoMessagesContent>
+    @* <NoMessagesContent>
         <div>Find any posts.</div>
-     </NoMessagesContent>
+     </NoMessagesContent> *@
+    <NoMessagesContent>
+        <h1>
+            Welcome to AI Exchange!
+        </h1>
+        <h2>
+            Easily check the latest exchange rates for any country in seconds. Smart, fast, and always up to date.
+        </h2>
+    </NoMessagesContent>
 </ChatMessageList>
 
 <div class="chat-container">
     <ChatSuggestions OnSelected="@AddUserMessageAsync" @ref="@chatSuggestions" />
     <ChatInput OnSend="@AddUserMessageAsync" @ref="@chatInput" />
-    <SurveyPrompt /> @* Remove this line to eliminate the template survey message *@
+    @* <SurveyPrompt /> *@ @* Remove this line to eliminate the template survey message *@
 </div>
 
 @code {
